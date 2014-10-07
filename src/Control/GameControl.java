@@ -8,7 +8,12 @@ package Control;
 
 import Model.Asteroid;
 import Model.Game;
+import Model.Point;
+import Model.Ship;
+import Model.SpaceObjects;
+import Model.Vector;
 import asteroids.Asteroids;
+import java.awt.event.KeyEvent;
 import java.util.Random;
 
 
@@ -19,6 +24,7 @@ import java.util.Random;
 public class GameControl {
     
     public static Game gameObjects;
+    public static int keyPressLength;
     
     public static int randomValue(int min, int max, boolean absoluteValue){
         Random randomGenerator = new Random();
@@ -45,8 +51,20 @@ public class GameControl {
         //Set game objects as current objects
         Asteroids.setGameObjects(gameObjects);
         
-        //Create Game Data
+        //Create Asteroids
         gameObjects.setLargeAsteroid(createAsteroids());
+        
+        //Create ship
+        Ship ship = new Ship();
+        gameObjects.setShip(ship);
+        
+        Ship nose = new Ship();
+        nose.getCenter().setX(ship.getxPoints()[2]);
+        nose.getCenter().setY(ship.getyPoints()[2]);
+        nose.setRadius(3);
+        gameObjects.setNose(nose);
+        
+        
     }
 
     private static Asteroid[] createAsteroids() {
@@ -65,76 +83,101 @@ public class GameControl {
         return largeAsteroid;
     }
     
+    
     public static void advanceGame(){
-        Game gameObjects = Asteroids.gameObjects;
         Asteroid[] largeAsteroid = gameObjects.getLargeAsteroid();
+        Ship ship = gameObjects.getShip();
+        //Ship nose = gameObjects.getNose();
         
-        for(int i =0; i < Constants.ASTEROID_LARGE_COUNT; i++){
-            calculatePolygon(largeAsteroid[i]);
-        }
-
-        advanceAsteroid(largeAsteroid);
+        advance(largeAsteroid);
+        advance(ship);
         
     }
     
-    private static void advanceAsteroid(Asteroid[] asteroid){
-        int newX;
-        int newY;
-        int xyMinBoundary = 0 + (int)(Constants.ASTEROID_LARGE_RADIUS / 2);
-        int xMaxBoundary = Constants.GAME_WIDTH + (int)(Constants.ASTEROID_LARGE_RADIUS / 2);
-        int yMaxBoundary = Constants.GAME_HEIGHT + (int)(Constants.ASTEROID_LARGE_RADIUS / 2);
+    private static void advance(Asteroid[] asteroid){
+        Point newPoint = new Point();
+
         
         for (int i = 0; i < Constants.ASTEROID_LARGE_COUNT; i++){
-            
-            //check to see if asteroid has reached edge of screen.
-            //if at edge then redraw on oposite side.
-            if (asteroid[i].getX() > xMaxBoundary){
-                newX = 0;
-                newY = asteroid[i].getY() + asteroid[i].getDy();
-            }
-            else if (asteroid[i].getX() < -xyMinBoundary){
-                newX = Constants.GAME_WIDTH;
-                newY = asteroid[i].getY() + asteroid[i].getDy();
-            }
-            else if (asteroid[i].getY() > yMaxBoundary){
-                newX = asteroid[i].getX() + asteroid[i].getDx();
-                newY = 0;
-            }
-            else if (asteroid[i].getY() < -xyMinBoundary){
-                newX = asteroid[i].getX() + asteroid[i].getDx();
-                newY = Constants.GAME_HEIGHT;
-            }
-            else{
-                newX = asteroid[i].getX() + asteroid[i].getDx();
-                newY = asteroid[i].getY() + asteroid[i].getDy();
-            }
-            asteroid[i].setX(newX);
-            asteroid[i].setY(newY);
+            Point oldPoint = asteroid[i].getCenter();
+            Vector oldVector = asteroid[i].getVector();
+
+            wrapObject(oldPoint, oldVector, newPoint);
+            asteroid[i].getCenter().setX(newPoint.getX());
+            asteroid[i].getCenter().setY(newPoint.getY());
             
             //rotate asteroid
             asteroid[i].setRotation(asteroid[i].getRotation() + Constants.ASTEROID_LARGE_ROTATION_SPEED);
-            calculatePolygon(asteroid[i]);
         }
     }
     
-    public static void calculatePolygon(Asteroid asteroid){
-        int n = asteroid.getSides();
-        int r = asteroid.getRadius();
-        int x = asteroid.getX();
-        int y = asteroid.getY();
-        int t = asteroid.getRotation();
-        int[] polygonXPoints = new int[n];
-        int[] polygonYPoints = new int[n];
+    private static void advance(Ship ship){
+        Point newPoint = new Point();
+        Point oldPoint = ship.getCenter();
+        Vector oldVector = ship.getVector();
         
-        for(int i = 0; i < n; i++){
-            polygonXPoints[i] = (int) (x + r * Math.cos((((2 * Math.PI)/n)*i + t)));
+        wrapObject(oldPoint, oldVector, newPoint);
+        
+        ship.getCenter().setX(newPoint.getX());
+        ship.getCenter().setY(newPoint.getY());
+    }
+    
+    private static void wrapObject(Point oldPoint, Vector oldVector, Point newPoint){
+
+        int xyMinBoundary = 0 + (int)(Constants.ASTEROID_LARGE_RADIUS / 2);
+        int xMaxBoundary = Constants.GAME_WIDTH + (int)(Constants.ASTEROID_LARGE_RADIUS / 2);
+        int yMaxBoundary = Constants.GAME_HEIGHT + (int)(Constants.ASTEROID_LARGE_RADIUS / 2);
+        int x = oldPoint.getX();
+        int y = oldPoint.getY();
+        int dx = (int) oldVector.getDx();
+        int dy = (int) oldVector.getDy();
+        
+        //check to see if asteroid has reached edge of screen.
+            //if at edge then redraw on oposite side.
+            if (x > xMaxBoundary){
+                newPoint.setX(0);
+                newPoint.setY(y + dy);
+            }
+            else if (x < -xyMinBoundary){
+                newPoint.setX(Constants.GAME_WIDTH);
+                newPoint.setY(y + dy);
+            }
+            else if (y > yMaxBoundary){
+                newPoint.setX(x + dx);
+                newPoint.setY(0);
+            }
+            else if (y < -xyMinBoundary){
+                newPoint.setX(x + dx);
+                newPoint.setY(Constants.GAME_HEIGHT);
+            }
+            else{
+                newPoint.setX(x + dx);
+                newPoint.setY(y +dy);
+            }
+        
+    }
+    
+    public static void keyPress(KeyEvent e){
+        Ship ship = gameObjects.getShip();
+        int keyCode = e.getKeyCode();
+        keyPressLength++;
+        System.out.println(keyPressLength);
+        
+        if (keyCode == KeyEvent.VK_UP){
+            ship.forwardThrust(keyPressLength);
         }
-        asteroid.setxPoints(polygonXPoints);
-        
-        for(int i = 0; i < n; i++){
-            polygonYPoints[i] = (int) (y + r * Math.sin((((2 * Math.PI)/n)*i + t)));
+        if (keyCode == KeyEvent.VK_DOWN){
+
         }
-        asteroid.setyPoints(polygonYPoints);
-        
+        if (keyCode == KeyEvent.VK_LEFT){
+            ship.rotateShip(keyPressLength, -1);
+        }
+        if (keyCode == KeyEvent.VK_RIGHT){
+            ship.rotateShip(keyPressLength, 1);
+        }
+    }
+    
+    public static void keyRelease(KeyEvent e){
+        keyPressLength = 0;
     }
 }

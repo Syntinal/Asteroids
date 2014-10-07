@@ -11,44 +11,29 @@ package Model;
  * @author Wittmann
  */
 public class SpaceObjects {
-    private int x;
-    private int y;
-    private int dx;
-    private int dy;
+    protected Point center;
+    protected Vector vector;
     private boolean dead;
-
-    public int getX() {
-        return x;
+    protected int sides;
+    protected int radius;
+    protected int rotation;
+    protected int rotationSpeed;
+    protected int[] xPoints;
+    protected int[] yPoints;
+    
+    public SpaceObjects(){
+        center = new Point();
+        vector = new Vector();
     }
 
-    public void setX(int x) {
-        this.x = x;
+    public Point getCenter() {
+        return center;
     }
 
-    public int getY() {
-        return y;
+    public void setCenter(Point center) {
+        this.center = center;
     }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public int getDx() {
-        return dx;
-    }
-
-    public void setDx(int dx) {
-        this.dx = dx;
-    }
-
-    public int getDy() {
-        return dy;
-    }
-
-    public void setDy(int dy) {
-        this.dy = dy;
-    }
-
+    
     public boolean isDead() {
         return dead;
     }
@@ -56,7 +41,62 @@ public class SpaceObjects {
     public void setDead(boolean dead) {
         this.dead = dead;
     }
+
+    public int getSides() {
+        return sides;
+    }
+
+    public void setSides(int sides) {
+        this.sides = sides;
+    }
+
+    public int getRadius() {
+        return radius;
+    }
+
+    public void setRadius(int radius) {
+        this.radius = radius;
+    }
+
+    public int getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(int rotation) {
+        this.rotation = rotation;
+    }
+
+    public int getRotationSpeed() {
+        return rotationSpeed;
+    }
+
+    public void setRotationSpeed(int rotationSpeed) {
+        this.rotationSpeed = rotationSpeed;
+    }
+
+    public int[] getxPoints() {
+        return xPoints;
+    }
+
+    public void setxPoints(int[] xPoints) {
+        this.xPoints = xPoints;
+    }
+
+    public int[] getyPoints() {
+        return yPoints;
+    }
+
+    public void setyPoints(int[] yPoints) {
+        this.yPoints = yPoints;
+    }
+
+    public Vector getVector() {
+        return vector;
+    }
+
+    public void setVector(Vector vector) {
+        this.vector = vector;
+    }
     
     
-           
 }

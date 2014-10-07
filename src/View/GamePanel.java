@@ -10,6 +10,7 @@ import Control.Constants;
 import Control.GameControl;
 import Model.Asteroid;
 import Model.Game;
+import Model.Ship;
 import asteroids.Asteroids;
 import java.awt.*;
 import java.awt.event.*;
@@ -37,25 +38,49 @@ public class GamePanel extends JPanel implements Runnable{
     private Thread game;
     private volatile boolean running = false;
     Game gameObjects = Asteroids.gameObjects;
+    int keyPressLength = 0;
     Asteroid[] largeAsteroid = gameObjects.getLargeAsteroid();
+    Ship ship = gameObjects.getShip();
     private int x;
     private int y;
-      
+ 
+    /*
+    public class AL extends KeyAdapter {
+        public void keyPressed(KeyEvent e){
+            
+            int keyCode = e.getKeyCode();
+            if (keyCode == KeyEvent.VK_UP){
+                
+            }
+            if (keyCode == KeyEvent.VK_DOWN){
+                
+            }
+            if (keyCode == KeyEvent.VK_LEFT){
+                
+            }
+            if (keyCode == KeyEvent.VK_RIGHT){
+                
+            }
+        }
+        public void keyReleased(KeyEvent e){
+            
+        }
+    }*/
     
     public GamePanel(){
         setPreferredSize(gameDim);
-        setBackground(Color.WHITE);
+        setBackground(Constants.BACKGROUND_COLOR);
         setFocusable(true);
         requestFocus();
         
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e){
-                
+                GameControl.keyPress(e);
             }
             @Override
             public void keyReleased(KeyEvent e){
-                
+                GameControl.keyRelease(e);
             }
             @Override
             public void keyTyped(KeyEvent e){
@@ -97,7 +122,7 @@ public class GamePanel extends JPanel implements Runnable{
             }
         }
         //Clear Screen
-        dbg.setColor(Color.WHITE);
+        dbg.setColor(Color.BLACK);
         dbg.fillRect(0,0, GWIDTH, GHEIGHT);
         
         //Draw Game
@@ -106,10 +131,12 @@ public class GamePanel extends JPanel implements Runnable{
     
     private void draw(Graphics g) {
         
-        g.setColor(Color.red);
         for (int i = 0; i < Constants.ASTEROID_LARGE_COUNT; i++){
-            g.drawPolygon(largeAsteroid[i].getxPoints(), largeAsteroid[i].getyPoints(), largeAsteroid[i].getSides());
+            largeAsteroid[i].drawAsteroid(g);
+
         }
+
+        ship.drawShip(g);
     }
     
     private void paintScreen(){
