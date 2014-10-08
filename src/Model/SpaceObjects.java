@@ -13,7 +13,7 @@ package Model;
 public class SpaceObjects {
     protected Point center;
     protected Vector vector;
-    private boolean dead;
+    protected boolean dead;
     protected int sides;
     protected int radius;
     protected int rotation;
@@ -24,6 +24,7 @@ public class SpaceObjects {
     public SpaceObjects(){
         center = new Point();
         vector = new Vector();
+        rotationSpeed = 0;
     }
 
     public Point getCenter() {

@@ -57,7 +57,7 @@ public class Asteroid extends SpaceObjects{
     }
     
     public void drawAsteroid(Graphics g){
-        g.setColor(Color.WHITE);
+        g.setColor(Constants.ASTEROID_COLOR);
         Draw.drawPolygon(g, center, rotation, sides, radius);
     }
 }

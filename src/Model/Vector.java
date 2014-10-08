@@ -61,4 +61,9 @@ public class Vector {
         dx += secVector.getDx();
         dy += secVector.getDy();
     }
+    
+    public void advancePoint(Point point){
+        point.setX((int) (point.getX() + dx));
+        point.setY((int) (point.getY() + dy));
+    }
 }

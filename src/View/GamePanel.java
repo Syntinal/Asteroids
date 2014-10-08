@@ -91,8 +91,7 @@ public class GamePanel extends JPanel implements Runnable{
         
     public void run(){
         while(running){
-            GameControl.advanceGame();
-            
+
             gameUpdate();
             gameRender();
             paintScreen();
@@ -107,7 +106,7 @@ public class GamePanel extends JPanel implements Runnable{
     
     private void gameUpdate(){
         if(running && game != null){
-            //update game state
+            GameControl.advanceGame();
         }
     }
     
@@ -131,12 +130,8 @@ public class GamePanel extends JPanel implements Runnable{
     
     private void draw(Graphics g) {
         
-        for (int i = 0; i < Constants.ASTEROID_LARGE_COUNT; i++){
-            largeAsteroid[i].drawAsteroid(g);
-
-        }
-
-        ship.drawShip(g);
+        GameControl.drawObjects(g);
+        
     }
     
     private void paintScreen(){

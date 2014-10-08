@@ -29,20 +29,20 @@ public class Draw{
         y[0] = (center.getY());
         
         x[1] = (center.getX() - (5 * Constants.SHIP_SIZE)); //starboard
-        y[1] = (center.getY() + (3 * Constants.SHIP_SIZE));
+        y[1] = (center.getY() + (4 * Constants.SHIP_SIZE));
         
         x[2] = (center.getX() - (1 * Constants.SHIP_SIZE)); //stern
         y[2] = (center.getY());
         
         x[3] = (center.getX() - (5 * Constants.SHIP_SIZE)); //port
-        y[3] = (center.getY() - (3 * Constants.SHIP_SIZE));
+        y[3] = (center.getY() - (4 * Constants.SHIP_SIZE));
         
         xyPoints.setxPoints(x);
         xyPoints.setyPoints(y);
         
         rotate(xyPoints, center, angle, sides);
         
-        g.setColor(Constants.SHIP_COLOR);
+        
         g.fillPolygon(xyPoints.getxPoints(), xyPoints.getyPoints(), sides);
     }
     

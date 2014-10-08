@@ -5,18 +5,14 @@
  */
 
 package Model;
-
-/**
- *
- * @author Wittmann
- */
 public class Game {
     
     private Asteroid[] largeAsteroid;
     private Asteroid[] mediumAsteroid;
     private Asteroid[] smallAsteroid;
     private Ship ship;
-    private Ship nose;
+    private Bullet[] bullets;
+    
 
     public Asteroid[] getLargeAsteroid() {
         return largeAsteroid;
@@ -50,16 +46,11 @@ public class Game {
         this.ship = ship;
     }
 
-    public Ship getNose() {
-        return nose;
+    public Bullet[] getBullets() {
+        return bullets;
     }
 
-    public void setNose(Ship nose) {
-        this.nose = nose;
+    public void setBullets(Bullet[] bullets) {
+        this.bullets = bullets;
     }
-
-    
-    
-    
-    
 }
